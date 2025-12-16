@@ -6,8 +6,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Gemini API 設定
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+# Gemini API 設定 - 支援 Streamlit Secrets 和 .env 文件
+try:
+    import streamlit as st
+    # Streamlit Cloud 環境使用 st.secrets
+    GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY", ""))
+except (ImportError, AttributeError):
+    # 本地開發環境使用 .env 文件
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = "gemini-2.0-flash"  # 使用最新穩定的 Gemini 模型
 
 # 爬蟲設定
