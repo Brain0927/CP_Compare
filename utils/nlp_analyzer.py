@@ -42,8 +42,22 @@ class GeminiAnalyzer:
     def __init__(self):
         """初始化 Gemini API，支援配額不足時自動降級"""
         self.use_local_mode = False
+        self.api_key = GEMINI_API_KEY
+        
+        # 如果環境變數中有更新的 API Key，使用它
+        import os
+        env_key = os.getenv("GEMINI_API_KEY", "")
+        if env_key:
+            self.api_key = env_key
+        
         try:
-            genai.configure(api_key=GEMINI_API_KEY)
+            if not self.api_key:
+                print("⚠️ 未找到 Gemini API Key，使用本地分析模式")
+                self.api_version = None
+                self.use_local_mode = True
+                return
+            
+            genai.configure(api_key=self.api_key)
             if hasattr(genai, 'GenerativeModel'):
                 self.model = genai.GenerativeModel(GEMINI_MODEL)
                 self.api_version = 'new'

@@ -8,23 +8,30 @@ import json
 from typing import List, Dict
 import time
 from datetime import datetime
+import os
 
-# 導入自定義模組
-from utils.scraper import scrape_products
-from utils.data_cleaner import DataCleaner
-from utils.nlp_analyzer import analyze_products, GeminiAnalyzer
-from utils.cp_calculator import CPCalculator
-from utils.similar_finder import SimilarProductFinder
-from config.settings import GEMINI_API_KEY
-
-
-# 設置頁面配置
+# 設置頁面配置（必須在最前面）
 st.set_page_config(
     page_title="AI CP值比較器",
     page_icon="🛍️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# 在這裡確保從 Streamlit Secrets 讀取 API Key
+try:
+    if "GEMINI_API_KEY" in st.secrets:
+        os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
+except Exception:
+    pass
+
+# 導入自定義模組（此時環境變數已設置）
+from utils.scraper import scrape_products
+from utils.data_cleaner import DataCleaner
+from utils.nlp_analyzer import analyze_products, GeminiAnalyzer
+from utils.cp_calculator import CPCalculator
+from utils.similar_finder import SimilarProductFinder
+from config.settings import GEMINI_API_KEY
 
 # 自定義 CSS - 購物車風格
 st.markdown("""
@@ -1043,7 +1050,29 @@ def main():
     
     # 檢查 API 金鑰
     if not GEMINI_API_KEY:
-        st.error("❌ 未設定 Gemini API 金鑰！請在 .env 檔案中設定 GEMINI_API_KEY")
+        st.error("""
+        ❌ 未設定 Gemini API 金鑰！
+
+        **解決方法：**
+
+        **本地開發環境：**
+        1. 編輯 .env 檔案
+        2. 添加：GEMINI_API_KEY=你的_API_Key
+        3. 保存後重新運行
+
+        **Streamlit Cloud 環境：**
+        1. 訪問 https://share.streamlit.io/
+        2. 應用菜單 ⋮ → Edit secrets
+        3. 添加以下配置（TOML 格式）：
+           ```
+           GEMINI_API_KEY = "你的_API_Key"
+           ```
+        4. 點擊 Save → 應用自動重啟（30秒）
+        5. 刷新頁面
+
+        **獲取 API Key：**
+        訪問 https://aistudio.google.com/app/apikey
+        """)
         st.stop()
     
     # 使用 Tab 組織介面
