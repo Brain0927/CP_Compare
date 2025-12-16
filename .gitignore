@@ -1,0 +1,65 @@
+# .gitignore 配置
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虛擬環境
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 環境變數
+.env
+.env.local
+.env.*.local
+
+# 日誌
+*.log
+logs/
+
+# 快取
+.streamlit/cache/
+.pytest_cache/
+.mypy_cache/
+
+# 系統
+.DS_Store
+Thumbs.db
+
+# 臨時文件
+*.tmp
+*.bak
+~*
+
+# 資料文件（可選，根據需要添加）
+# *.pkl
+# *.csv
+# *.json
